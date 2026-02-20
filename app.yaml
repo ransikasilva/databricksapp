@@ -8,17 +8,8 @@ command:
 
 env:
   - name: DATABRICKS_HOST
-    valueFrom:
-      secretKeyRef:
-        scope: databricks-app-secrets
-        key: databricks_host
+    value: "{{secrets/databricks-app-secrets/databricks_host}}"
   - name: DATABRICKS_HTTP_PATH
-    valueFrom:
-      secretKeyRef:
-        scope: databricks-app-secrets
-        key: databricks_http_path
+    value: "{{secrets/databricks-app-secrets/databricks_http_path}}"
   - name: DATABRICKS_TOKEN
-    valueFrom:
-      secretKeyRef:
-        scope: databricks-app-secrets
-        key: databricks_token
+    value: "{{secrets/databricks-app-secrets/databricks_token}}"
