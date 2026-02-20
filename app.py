@@ -25,6 +25,18 @@ app.add_middleware(
 def health_check():
     return {"status": "healthy", "message": "API is running"}
 
+@app.get("/api/debug/env")
+def debug_env():
+    """Debug endpoint to check environment variables"""
+    return {
+        "DATABRICKS_HOST": os.getenv('DATABRICKS_HOST', 'NOT SET')[:20] + "..." if os.getenv('DATABRICKS_HOST') else "NOT SET",
+        "DATABRICKS_HTTP_PATH": os.getenv('DATABRICKS_HTTP_PATH', 'NOT SET'),
+        "DATABRICKS_TOKEN": "***" + os.getenv('DATABRICKS_TOKEN', 'NOT SET')[-4:] if os.getenv('DATABRICKS_TOKEN') else "NOT SET",
+        "has_host": bool(os.getenv('DATABRICKS_HOST')),
+        "has_path": bool(os.getenv('DATABRICKS_HTTP_PATH')),
+        "has_token": bool(os.getenv('DATABRICKS_TOKEN'))
+    }
+
 def execute_databricks_sql(query):
     """Execute SQL query using Databricks SQL Statements API"""
     try:
