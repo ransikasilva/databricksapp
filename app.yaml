@@ -6,10 +6,16 @@ command:
   - --port
   - "8000"
 
+resources:
+  - name: databricks_token
+    secret:
+      scope: databricks-app-secrets
+      key: databricks_token
+
 env:
   - name: DATABRICKS_HOST
     value: dbc-c23120d2-efa8.cloud.databricks.com
   - name: DATABRICKS_HTTP_PATH
     value: /sql/1.0/warehouses/fcf42eaf967ad434
   - name: DATABRICKS_TOKEN
-    value: "{{secrets/databricks-app-secrets/databricks_token}}"
+    valueFrom: databricks_token
