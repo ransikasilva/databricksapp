@@ -11,10 +11,10 @@ load_dotenv()
 
 app = FastAPI()
 
-# Enable CORS for local development
+# Enable CORS for local development and Databricks deployment
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],
+    allow_origins=["*"],  # Allow all origins for Databricks Apps deployment
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
