@@ -5,3 +5,20 @@ command:
   - 0.0.0.0
   - --port
   - "8000"
+
+env:
+  - name: DATABRICKS_HOST
+    valueFrom:
+      secretKeyRef:
+        scope: databricks-app-secrets
+        key: databricks_host
+  - name: DATABRICKS_HTTP_PATH
+    valueFrom:
+      secretKeyRef:
+        scope: databricks-app-secrets
+        key: databricks_http_path
+  - name: DATABRICKS_TOKEN
+    valueFrom:
+      secretKeyRef:
+        scope: databricks-app-secrets
+        key: databricks_token
