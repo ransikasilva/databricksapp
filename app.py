@@ -1,60 +1,91 @@
 import os
+import requests
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
-from databricks import sql
 from dotenv import load_dotenv
-from datetime import datetime, timedelta
-import random
 
 # Load environment variables
 load_dotenv()
 
 app = FastAPI()
 
+# Enable CORS for local development
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 # Example API endpoint
 @app.get("/api/health")
 def health_check():
     return {"status": "healthy", "message": "API is running"}
 
-def generate_sample_sales_data():
-    """Generate realistic sample sales data for demo"""
-    products = [
-        "Laptop", "Smartphone", "Tablet", "Headphones", "Smartwatch",
-        "Monitor", "Keyboard", "Mouse", "Webcam", "Speaker"
-    ]
-    categories = ["Electronics", "Accessories", "Computers", "Audio", "Wearables"]
-    regions = ["North America", "Europe", "Asia", "South America", "Africa"]
+def execute_databricks_sql(query):
+    """Execute SQL query using Databricks SQL Statements API"""
+    try:
+        url = f"https://{os.getenv('DATABRICKS_HOST')}/api/2.0/sql/statements"
+        headers = {
+            "Authorization": f"Bearer {os.getenv('DATABRICKS_TOKEN')}",
+            "Content-Type": "application/json"
+        }
+        payload = {
+            "warehouse_id": os.getenv('DATABRICKS_HTTP_PATH').split('/')[-1],
+            "statement": query,
+            "wait_timeout": "30s"
+        }
 
-    sales_data = []
-    base_date = datetime.now() - timedelta(days=365)
+        response = requests.post(url, headers=headers, json=payload)
+        response.raise_for_status()
+        result = response.json()
 
-    for i in range(500):
-        sale_date = base_date + timedelta(days=random.randint(0, 365))
-        product = random.choice(products)
+        if result["status"]["state"] == "SUCCEEDED":
+            # Extract column names
+            columns = [col["name"] for col in result["manifest"]["schema"]["columns"]]
+            # Extract rows
+            rows = result.get("result", {}).get("data_array", [])
 
-        sales_data.append({
-            "id": i + 1,
-            "date": sale_date.strftime("%Y-%m-%d"),
-            "product": product,
-            "category": random.choice(categories),
-            "region": random.choice(regions),
-            "quantity": random.randint(1, 20),
-            "unit_price": round(random.uniform(50, 2000), 2),
-            "revenue": 0,  # will calculate below
-            "customer_id": f"CUST{random.randint(1000, 9999)}"
-        })
+            # Convert to list of dictionaries
+            return [dict(zip(columns, row)) for row in rows]
+        else:
+            print(f"Query failed with state: {result['status']['state']}")
+            return []
 
-        sales_data[-1]["revenue"] = round(
-            sales_data[-1]["quantity"] * sales_data[-1]["unit_price"], 2
-        )
+    except Exception as e:
+        print(f"Error executing Databricks SQL: {e}")
+        return []
 
-    return sales_data
+def get_sales_data_from_databricks():
+    """Get real sales data from Databricks table"""
+    try:
+        sales_data = execute_databricks_sql("SELECT * FROM workspace.default.sales_data")
+
+        # Convert data types
+        for row in sales_data:
+            if 'date' in row and row['date']:
+                row['date'] = str(row['date'])
+            if 'id' in row:
+                row['id'] = int(row['id'])
+            if 'quantity' in row:
+                row['quantity'] = int(row['quantity'])
+            if 'unit_price' in row:
+                row['unit_price'] = float(row['unit_price'])
+            if 'revenue' in row:
+                row['revenue'] = float(row['revenue'])
+
+        return sales_data
+    except Exception as e:
+        print(f"Error fetching data from Databricks: {e}")
+        return []
 
 @app.get("/api/sales/overview")
 def get_sales_overview():
-    """Get high-level sales KPIs"""
-    sales_data = generate_sample_sales_data()
+    """Get high-level sales KPIs from Databricks"""
+    sales_data = get_sales_data_from_databricks()
 
     total_revenue = sum(item["revenue"] for item in sales_data)
     total_orders = len(sales_data)
@@ -71,8 +102,8 @@ def get_sales_overview():
 
 @app.get("/api/sales/trends")
 def get_sales_trends():
-    """Get sales trends over time"""
-    sales_data = generate_sample_sales_data()
+    """Get sales trends over time from Databricks"""
+    sales_data = get_sales_data_from_databricks()
 
     # Group by month
     monthly_data = {}
@@ -98,8 +129,8 @@ def get_sales_trends():
 
 @app.get("/api/sales/by-product")
 def get_sales_by_product():
-    """Get sales breakdown by product"""
-    sales_data = generate_sample_sales_data()
+    """Get sales breakdown by product from Databricks"""
+    sales_data = get_sales_data_from_databricks()
 
     product_data = {}
     for item in sales_data:
@@ -128,8 +159,8 @@ def get_sales_by_product():
 
 @app.get("/api/sales/by-region")
 def get_sales_by_region():
-    """Get sales breakdown by region"""
-    sales_data = generate_sample_sales_data()
+    """Get sales breakdown by region from Databricks"""
+    sales_data = get_sales_data_from_databricks()
 
     region_data = {}
     for item in sales_data:
@@ -156,8 +187,8 @@ def get_sales_by_region():
 
 @app.get("/api/sales/by-category")
 def get_sales_by_category():
-    """Get sales breakdown by category"""
-    sales_data = generate_sample_sales_data()
+    """Get sales breakdown by category from Databricks"""
+    sales_data = get_sales_data_from_databricks()
 
     category_data = {}
     for item in sales_data:
@@ -184,13 +215,18 @@ def get_sales_by_category():
 
 @app.get("/api/sales/recent")
 def get_recent_sales():
-    """Get recent sales transactions"""
-    sales_data = generate_sample_sales_data()
+    """Get recent sales transactions from Databricks"""
+    sales_data = get_sales_data_from_databricks()
 
     # Sort by date descending and take top 20
     recent = sorted(sales_data, key=lambda x: x["date"], reverse=True)[:20]
 
     return recent
+
+@app.get("/api/sample-data")
+def get_sample_data():
+    """Get sample data from Databricks table"""
+    return get_sales_data_from_databricks()
 
 # Serve React static files (after build)
 # Mount build folder only if it exists

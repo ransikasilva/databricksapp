@@ -1,0 +1,51 @@
+id,date,product,category,region,quantity,unit_price,revenue,customer_id
+1,2024-03-15,Laptop,Computers,North America,2,1299.99,2599.98,CUST1523
+2,2024-03-16,Smartphone,Electronics,Europe,1,899.99,899.99,CUST2341
+3,2024-03-17,Headphones,Audio,Asia,5,149.99,749.95,CUST3456
+4,2024-03-18,Monitor,Computers,North America,3,449.99,1349.97,CUST1523
+5,2024-03-19,Keyboard,Accessories,Europe,10,79.99,799.90,CUST4567
+6,2024-03-20,Mouse,Accessories,Asia,15,29.99,449.85,CUST5678
+7,2024-03-21,Tablet,Electronics,South America,2,599.99,1199.98,CUST6789
+8,2024-03-22,Smartwatch,Wearables,Africa,1,349.99,349.99,CUST7890
+9,2024-03-23,Webcam,Accessories,North America,8,99.99,799.92,CUST1523
+10,2024-03-24,Speaker,Audio,Europe,4,199.99,799.96,CUST2341
+11,2024-04-01,Laptop,Computers,Asia,1,1299.99,1299.99,CUST8901
+12,2024-04-02,Smartphone,Electronics,North America,3,899.99,2699.97,CUST9012
+13,2024-04-03,Headphones,Audio,Europe,7,149.99,1049.93,CUST1234
+14,2024-04-04,Monitor,Computers,Asia,2,449.99,899.98,CUST2345
+15,2024-04-05,Keyboard,Accessories,South America,12,79.99,959.88,CUST3456
+16,2024-04-06,Mouse,Accessories,Africa,20,29.99,599.80,CUST4567
+17,2024-04-07,Tablet,Electronics,North America,4,599.99,2399.96,CUST1523
+18,2024-04-08,Smartwatch,Wearables,Europe,2,349.99,699.98,CUST5678
+19,2024-04-09,Webcam,Accessories,Asia,6,99.99,599.94,CUST6789
+20,2024-04-10,Speaker,Audio,South America,3,199.99,599.97,CUST7890
+21,2024-05-01,Laptop,Computers,Africa,5,1299.99,6499.95,CUST8901
+22,2024-05-02,Smartphone,Electronics,North America,2,899.99,1799.98,CUST1523
+23,2024-05-03,Headphones,Audio,Europe,9,149.99,1349.91,CUST9012
+24,2024-05-04,Monitor,Computers,Asia,1,449.99,449.99,CUST1234
+25,2024-05-05,Keyboard,Accessories,South America,8,79.99,639.92,CUST2345
+26,2024-05-06,Mouse,Accessories,Africa,18,29.99,539.82,CUST3456
+27,2024-05-07,Tablet,Electronics,North America,3,599.99,1799.97,CUST4567
+28,2024-05-08,Smartwatch,Wearables,Europe,4,349.99,1399.96,CUST1523
+29,2024-05-09,Webcam,Accessories,Asia,10,99.99,999.90,CUST5678
+30,2024-05-10,Speaker,Audio,South America,2,199.99,399.98,CUST6789
+31,2024-06-01,Laptop,Computers,North America,1,1299.99,1299.99,CUST7890
+32,2024-06-02,Smartphone,Electronics,Europe,5,899.99,4499.95,CUST8901
+33,2024-06-03,Headphones,Audio,Asia,12,149.99,1799.88,CUST9012
+34,2024-06-04,Monitor,Computers,South America,3,449.99,1349.97,CUST1234
+35,2024-06-05,Keyboard,Accessories,Africa,15,79.99,1199.85,CUST1523
+36,2024-06-06,Mouse,Accessories,North America,25,29.99,749.75,CUST2345
+37,2024-06-07,Tablet,Electronics,Europe,2,599.99,1199.98,CUST3456
+38,2024-06-08,Smartwatch,Wearables,Asia,6,349.99,2099.94,CUST4567
+39,2024-06-09,Webcam,Accessories,South America,7,99.99,699.93,CUST5678
+40,2024-06-10,Speaker,Audio,Africa,5,199.99,999.95,CUST1523
+41,2024-07-01,Laptop,Computers,Europe,3,1299.99,3899.97,CUST6789
+42,2024-07-02,Smartphone,Electronics,Asia,4,899.99,3599.96,CUST7890
+43,2024-07-03,Headphones,Audio,North America,6,149.99,899.94,CUST8901
+44,2024-07-04,Monitor,Computers,Europe,4,449.99,1799.96,CUST9012
+45,2024-07-05,Keyboard,Accessories,Asia,20,79.99,1599.80,CUST1234
+46,2024-07-06,Mouse,Accessories,South America,30,29.99,899.70,CUST1523
+47,2024-07-07,Tablet,Electronics,Africa,1,599.99,599.99,CUST2345
+48,2024-07-08,Smartwatch,Wearables,North America,3,349.99,1049.97,CUST3456
+49,2024-07-09,Webcam,Accessories,Europe,9,99.99,899.91,CUST4567
+50,2024-07-10,Speaker,Audio,Asia,4,199.99,799.96,CUST5678

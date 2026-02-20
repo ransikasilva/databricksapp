@@ -1,5 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import { FiBarChart2 } from 'react-icons/fi';
 import './App.css';
 import Dashboard from './pages/Dashboard';
 import SalesDashboard from './pages/SalesDashboard';
@@ -10,7 +11,10 @@ function App() {
       <div className="App">
         <nav className="navbar">
           <div className="nav-container">
-            <h1 className="nav-title">📊 Databricks Analytics</h1>
+            <h1 className="nav-title">
+              <FiBarChart2 size={24} style={{ marginRight: '0.5rem' }} />
+              Databricks Analytics
+            </h1>
             <ul className="nav-links">
               <li><Link to="/">Home</Link></li>
               <li><Link to="/sales">Sales Dashboard</Link></li>
