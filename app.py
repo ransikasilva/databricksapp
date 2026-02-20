@@ -28,7 +28,10 @@ def health_check():
 def execute_databricks_sql(query):
     """Execute SQL query using Databricks SQL Statements API"""
     try:
-        url = f"https://{os.getenv('DATABRICKS_HOST')}/api/2.0/sql/statements"
+        # Get host and ensure it doesn't have protocol prefix
+        databricks_host = os.getenv('DATABRICKS_HOST', '').replace('https://', '').replace('http://', '')
+
+        url = f"https://{databricks_host}/api/2.0/sql/statements"
         headers = {
             "Authorization": f"Bearer {os.getenv('DATABRICKS_TOKEN')}",
             "Content-Type": "application/json"
@@ -39,15 +42,23 @@ def execute_databricks_sql(query):
             "wait_timeout": "30s"
         }
 
+        print(f"DEBUG: Making request to {url}")
+        print(f"DEBUG: Warehouse ID: {payload['warehouse_id']}")
+        print(f"DEBUG: Query: {query}")
+
         response = requests.post(url, headers=headers, json=payload)
         response.raise_for_status()
         result = response.json()
+
+        print(f"DEBUG: Response status: {result['status']['state']}")
 
         if result["status"]["state"] == "SUCCEEDED":
             # Extract column names
             columns = [col["name"] for col in result["manifest"]["schema"]["columns"]]
             # Extract rows
             rows = result.get("result", {}).get("data_array", [])
+
+            print(f"DEBUG: Retrieved {len(rows)} rows")
 
             # Convert to list of dictionaries
             return [dict(zip(columns, row)) for row in rows]
@@ -57,6 +68,8 @@ def execute_databricks_sql(query):
 
     except Exception as e:
         print(f"Error executing Databricks SQL: {e}")
+        import traceback
+        traceback.print_exc()
         return []
 
 def get_sales_data_from_databricks():
